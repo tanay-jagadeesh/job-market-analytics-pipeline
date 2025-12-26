@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import requests
 import os
+import pandas as pd
 
 #loaded env
 load_dotenv()
@@ -19,3 +20,6 @@ except requests.HTTPError as h:
     print(f"Failed as {h}")
 except ValueError as v:
     print(f"FAILED as {v}")
+
+for job in response:
+    
