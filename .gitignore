@@ -73,6 +73,3 @@ htmlcov/
 
 # OS
 Thumbs.db
-
-ADZUNA_APP_ID = "efbe8c3d"
-ADZUNA_API_KEY = "1d1e4feefbf9d83e31e95f8302132294"
