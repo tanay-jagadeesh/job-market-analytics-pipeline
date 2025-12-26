@@ -13,7 +13,9 @@ response = requests.get(url = f"https://api.adzuna.com/v1/api/jobs/gb/search/1?a
 
 try:
     response.raise_for_status()
-    response.json()
+    data = response.json()
     print("SUCCESS")
-except ValueError:
-    print("FAILED")
+except requests.HTTPError as h:
+    print(f"Failed as {h}")
+except ValueError as v:
+    print(f"FAILED as {v}")
