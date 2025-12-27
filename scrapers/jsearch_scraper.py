@@ -60,3 +60,6 @@ for job in data['data']:
     if (job_title and "remote" in job_title.lower()) or (job_description and "remote" in job_description.lower()):
         print("This is a remote job")
     
+df = pd.DataFrame(data['data'])
+job_csv = df.to_csv('jobs_info.csv', index = False)
+print(f"{len(df)} jobs saved!")
