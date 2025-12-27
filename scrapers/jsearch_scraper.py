@@ -33,4 +33,15 @@ except requests.HTTPError as h:
 except ValueError as v:
     print(f"FAILED as {v}")
 
+#Extracted skills from job desc.
+skills_list = ['python', 'sql', 'aws', 'java', 'tableau', 'power bi', 'excel', 'r', 'spark', 'azure']
+
+for job in data['data']:
+    job_description = job.get('job_description')
     
+    if job_description: 
+        desc_lower = job_description.lower()
+        
+        for skill in skills_list:
+            if skill.lower() in desc_lower:
+                print(f"NEEDS {skill}")
