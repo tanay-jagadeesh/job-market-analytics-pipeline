@@ -8,7 +8,21 @@ load_dotenv()
 
 app_key = os.getenv('JSEARCH_API_KEY')
 
-response = requests.get(url = f"https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={app_id}&app_key={app_key}")
+url = "https://jsearch.p.rapidapi.com/search"
+
+headers = {
+    "X-RapidAPI-Key": app_key,
+    "X_RapidAPI-Host": "jsearch.p.rapidapi.com"
+}
+
+params = {
+    "queries": "data analyst",
+    "num_pages": 1,
+    "country": "Canada"
+    }
+
+response = requests.get(url = url, header = headers, params = params)
+
 
 try:
     response.raise_for_status()
@@ -19,5 +33,4 @@ except requests.HTTPError as h:
 except ValueError as v:
     print(f"FAILED as {v}")
 
-for job in response:
     
