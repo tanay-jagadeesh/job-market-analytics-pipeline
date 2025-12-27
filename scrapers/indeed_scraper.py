@@ -11,18 +11,17 @@ app_key = os.getenv('JSEARCH_API_KEY')
 url = "https://jsearch.p.rapidapi.com/search"
 
 headers = {
-    "X-RapidAPI-Key": app_key,
-    "X_RapidAPI-Host": "jsearch.p.rapidapi.com"
+    "X-RapidAPI_Key": app_key,
+    "X_RapidAPI_Host": "jsearch.p.rapidapi.com"
 }
 
 params = {
-    "queries": "data analyst",
+    "query": "data analyst",
     "num_pages": 1,
-    "country": "Canada"
+    "country": "ca"
     }
 
-response = requests.get(url = url, header = headers, params = params)
-
+response = requests.get(url = url, headers = headers, params = params)
 
 try:
     response.raise_for_status()
