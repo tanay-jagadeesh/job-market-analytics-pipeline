@@ -56,3 +56,7 @@ for job in data['data']:
             print("Senior Level")
         else:
             print("Mid Level")
+
+    if (job_title and "remote" in job_title.lower()) or (job_description and "remote" in job_description.lower()):
+        print("This is a remote job")
+    
