@@ -11,8 +11,8 @@ app_key = os.getenv('JSEARCH_API_KEY')
 url = "https://jsearch.p.rapidapi.com/search"
 
 headers = {
-    "X-RapidAPI_Key": app_key,
-    "X_RapidAPI_Host": "jsearch.p.rapidapi.com"
+    "X-RapidAPI-Key": app_key,
+    "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
 }
 
 params = {
@@ -26,6 +26,7 @@ response = requests.get(url = url, headers = headers, params = params)
 try:
     response.raise_for_status()
     data = response.json()
+    print(data)
     print("SUCCESS")
 except requests.HTTPError as h:
     print(f"Failed as {h}")
