@@ -5,7 +5,7 @@ CREATE DATABASE job_market_db;
 CREATE TABLE companies (
     company_id INT PRIMARY KEY,
     company_name VARCHAR NOT NULL
-)
+);
 
 -- storing unique cities
 
@@ -13,14 +13,14 @@ CREATE TABLE locations (
     location_id INT PRIMARY KEY,
     city VARCHAR(100) NOT NULL,
     province VARCHAR(100) NOT NULL
-)
+);
 
 -- storing unique skills
 
 CREATE TABLE skills (
     skill_id INT PRIMARY KEY,
     skill_name VARCHAR NOT NULL
-)
+);
 
 -- job postings table (info)
 CREATE TABLE job_postings (
@@ -36,7 +36,7 @@ CREATE TABLE job_postings (
     is_remote BOOLEAN,
     experience_level VARCHAR,
     job_description VARCHAR
-)
+);
 
 -- job skills table
 CREATE TABLE job_skills (
@@ -45,4 +45,4 @@ CREATE TABLE job_skills (
     PRIMARY KEY (job_id, skill_id),
     FOREIGN KEY (job_id) REFERENCES job_postings(job_id),
     FOREIGN KEY (skill_id) REFERENCES skills(skill_id)
-)
+);
