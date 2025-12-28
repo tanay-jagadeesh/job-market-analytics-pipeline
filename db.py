@@ -1,14 +1,17 @@
 import psycopg2
 import pandas as pd
+from dotenv import load_dotenv
+import os
 
-DB_NAME = "job_market_db"
-DB_USER = "User123"
-DB_PASS = "Helloworld123"
-DB_HOST = "localhost"
-DB_PORT = "5432"
+load_dotenv()
+
+DB_NAME = os.getenv('DB_NAME')
+DB_USER = os.getenv('DB_USER')
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = os.getenv('DB_PORT')
 
 try:
-    conn = psycopg2.connect(database = DB_NAME, user = DB_USER, password = DB_PASS, host = DB_HOST, port = DB_PORT)
+    conn = psycopg2.connect(database=DB_NAME, user=DB_USER, host=DB_HOST, port=DB_PORT)
     print("SUCCESSFUL DATABASE CONNECTION")
 except Exception as e:
     print(f"UNSUCCESSFUL DATABASE CONNECTION: {e}")
