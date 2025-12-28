@@ -37,3 +37,12 @@ CREATE TABLE job_postings (
     experience_level VARCHAR,
     job_description VARCHAR
 )
+
+-- job skills table
+CREATE TABLE job_skills (
+    job_id INT NOT NULL,
+    skill_id INT NOT NULL,
+    PRIMARY KEY (job_id, skill_id),
+    FOREIGN KEY (job_id) REFERENCES job_postings(job_id),
+    FOREIGN KEY (skill_id) REFERENCES skills(skill_id)
+)
