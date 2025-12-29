@@ -25,3 +25,14 @@ JOIN companies c ON jp.company_id = c.company_id
 JOIN locations l ON jp.location_id = l.location_id
 ORDER BY jp.job_id
 LIMIT 10;
+
+-- Query 3: Average Salary by role (rounded average, # of jobs w title, salary range, median, standard deviation)
+SELECT job_title, 
+ROUND(AVG((salary_min + salary_max) / 2 )) as avg_salary,
+COUNT(*) as job_count,
+AVG(salary_max - salary_min) as salary_range,
+PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY (salary_min + salary_max) / 2) as median_salary,
+STDDEV((salary_min + salary_max) / 2) as std_salary
+FROM job_postings
+GROUP BY job_title
+;
