@@ -44,4 +44,28 @@ def insert_company(company_name):
         conn.close()
         return company_id
 
-    
+"""CONVERTED LOCATION (CITY, PROVINCE) TO ID"""
+def insert_location(city, province):
+    conn = get_connection()
+    c = conn.cursor()
+
+    # Check if location already exists (matching BOTH city AND province)
+    c.execute("SELECT location_id FROM locations WHERE city = %s AND province = %s", (city, province))
+
+    result = c.fetchone()
+
+    if result:
+        location_id = result[0]
+        c.close()
+        conn.close()
+        return location_id
+    else:
+        c.execute(
+            "INSERT INTO locations (city, province) VALUES (%s, %s) RETURNING location_id",
+            (city, province)
+        )
+        location_id = c.fetchone()[0]
+        conn.commit()
+        c.close()
+        conn.close()
+        return location_id
