@@ -114,3 +114,19 @@ def insert_job(job_title, company_name, city, province, salary_min, salary_max, 
     c.close()
     conn.close()
     return job_id
+
+"""links jobs to multiple skills in junction table"""
+def insert_job_skills(job_id, skill_id):
+    conn = get_connection()
+    c = conn.cursor()
+    
+    c.execute(
+        "INSERT INTO job_skills (job_id, skill_id) VALUES (%s, %s)",
+        (job_id, skill_id)
+    )
+    
+    conn.commit()
+    c.close()
+    conn.close()
+
+    
