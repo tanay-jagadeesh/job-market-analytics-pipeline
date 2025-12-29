@@ -15,3 +15,33 @@ try:
     print("SUCCESSFUL DATABASE CONNECTION")
 except Exception as e:
     print(f"UNSUCCESSFUL DATABASE CONNECTION: {e}")
+
+
+def get_connection():
+    return psycopg2.connect(database=DB_NAME, user=DB_USER, host=DB_HOST, port=DB_PORT)
+
+"""CONVERTED COMPANY NAME TO ID"""
+def insert_company(company_name):
+    conn = get_connection()
+
+    c = conn.cursor()
+
+    c.execute("SELECT company_id FROM companies WHERE company_name = %s", (company_name,))
+
+    result = c.fetchone()
+
+    if result:
+        company_id = result[0]
+        return company_id
+    else:
+        c.execute(
+            "INSERT INTO companies (company_name) VALUES (%s) RETURNING company_id",
+            (company_name,)
+        )
+        company_id = c.fetchone()[0]
+        conn.commit()
+        c.close()
+        conn.close()
+        return company_id
+
+    
