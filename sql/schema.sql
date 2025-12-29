@@ -1,16 +1,16 @@
 CREATE DATABASE job_market_db;
 
--- storing unique company names 
+-- storing unique company names
 
 CREATE TABLE companies (
-    company_id INT PRIMARY KEY,
-    company_name VARCHAR NOT NULL
+    company_id SERIAL PRIMARY KEY,
+    company_name VARCHAR(255) NOT NULL
 );
 
 -- storing unique cities
 
 CREATE TABLE locations (
-    location_id INT PRIMARY KEY,
+    location_id SERIAL PRIMARY KEY,
     city VARCHAR(100) NOT NULL,
     province VARCHAR(100) NOT NULL
 );
@@ -18,14 +18,14 @@ CREATE TABLE locations (
 -- storing unique skills
 
 CREATE TABLE skills (
-    skill_id INT PRIMARY KEY,
-    skill_name VARCHAR NOT NULL
+    skill_id SERIAL PRIMARY KEY,
+    skill_name VARCHAR(100) NOT NULL
 );
 
 -- job postings table (info)
 CREATE TABLE job_postings (
-    job_id INT PRIMARY KEY,
-    job_title VARCHAR NOT NULL,
+    job_id SERIAL PRIMARY KEY,
+    job_title VARCHAR(255) NOT NULL,
     company_id INT NOT NULL,
     FOREIGN KEY (company_id) REFERENCES companies(company_id),
     location_id INT NOT NULL,
@@ -34,8 +34,8 @@ CREATE TABLE job_postings (
     salary_max INT NOT NULL,
     posted_date DATE,
     is_remote BOOLEAN,
-    experience_level VARCHAR,
-    job_description VARCHAR
+    experience_level VARCHAR(50),
+    job_description TEXT
 );
 
 -- job skills table
