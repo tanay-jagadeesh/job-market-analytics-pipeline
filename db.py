@@ -2,6 +2,7 @@ import psycopg2
 import pandas as pd
 from dotenv import load_dotenv
 import os
+import re
 
 load_dotenv()
 
@@ -160,7 +161,8 @@ for i, row in df.iterrows():
     if pd.notna(row['job_description']):
         desc_lower = row['job_description'].lower()
         for skill in skills_list:
-            if skill in desc_lower:
+            # Use word boundaries to match whole words only (prevents 'r' from matching 'programmer')
+            if re.search(rf'\b{re.escape(skill)}\b', desc_lower):
                 skill_id = insert_skill(skill)
                 insert_job_skills(job_id, skill_id)
 
