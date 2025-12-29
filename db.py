@@ -129,4 +129,7 @@ def insert_job_skills(job_id, skill_id):
     c.close()
     conn.close()
 
-    
+df = pd.read_csv('job_info.csv')
+
+for i, row in df.iterrows():
+    insert_job(row['job_title'], row['company_name'], row['city'], row['province'])
