@@ -69,3 +69,28 @@ def insert_location(city, province):
         c.close()
         conn.close()
         return location_id
+
+"""CONVERTED SKILLS TO ID"""
+def insert_skill(skill_name):
+    conn = get_connection()
+    c = conn.cursor()
+
+    c.execute("SELECT skill_id FROM skills WHERE skill_name = %s", (skill_name,))
+
+    result = c.fetchone()
+
+    if result:
+        skill_id = result[0]
+        c.close()
+        conn.close()
+        return skill_id
+    else:
+        c.execute(
+            "INSERT INTO skills (skill_name) VALUES (%s) RETURNING skill_id",
+            (skill_name,)
+        )
+        skill_id = c.fetchone()[0]
+        conn.commit()
+        c.close()
+        conn.close()
+        return skill_id
