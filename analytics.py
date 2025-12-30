@@ -132,3 +132,28 @@ def run_query_6():
     conn.close()
     print("Query 6 complete: Top Hiring Companies saved to results/query_6_top_companies.csv")
     return df
+
+def run_all_queries():
+    """Run all queries and save results to CSV files"""
+    print("Running all queries...\n")
+
+    run_query_1()
+    run_query_2()
+    run_query_3()
+    run_query_4()
+    run_query_5()
+    run_query_6()
+
+    print("\n" + "="*60)
+    print("All queries completed successfully!")
+    print("Results saved to the 'results/' directory")
+    print("="*60)
+
+if __name__ == "__main__":
+    # Create results directory if it doesn't exist
+    import os
+    if not os.path.exists('results'):
+        os.makedirs('results')
+
+    # Run all queries
+    run_all_queries()
