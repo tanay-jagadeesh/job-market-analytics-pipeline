@@ -90,3 +90,23 @@ def run_query_4():
     conn.close()
     print("Query 4 complete: Skill Co-occurrence saved to results/query_4_skill_cooccurrence.csv")
     return df
+
+def run_query_5():
+    """Hiring Trends Over Time"""
+    query = """
+    SELECT
+        DATE_TRUNC('week', posted_date) AS week_start,
+        COUNT(*) as jobs_posted,
+        COUNT(DISTINCT company_id) as unique_companies
+    FROM job_postings
+    WHERE posted_date >= CURRENT_DATE - INTERVAL '90 days'
+    GROUP BY week_start
+    ORDER BY week_start DESC;
+    """
+
+    conn = get_connection()
+    df = pd.read_sql(query, conn)
+    df.to_csv('results/query_5_hiring_trends.csv', index=False)
+    conn.close()
+    print("Query 5 complete: Hiring Trends saved to results/query_5_hiring_trends.csv")
+    return df
