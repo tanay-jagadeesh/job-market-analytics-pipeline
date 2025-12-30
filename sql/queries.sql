@@ -50,3 +50,14 @@ GROUP BY skill_1, skill_2
 HAVING COUNT(*) >= 5
 ORDER BY pair_count DESC
 ;
+
+-- Query 5 - Hiring Trends Over Time
+SELECT 
+    DATE_TRUNC('week', posted_date) AS week_start,
+    COUNT(*) as jobs_posted,
+    COUNT(DISTINCT company_id) as unique_companies
+FROM job_postings 
+WHERE posted_date >= CURRENT_DATE - INTERVAL '90 days'
+GROUP BY week_start
+ORDER BY week_start DESC
+;
