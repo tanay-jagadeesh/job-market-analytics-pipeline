@@ -47,3 +47,23 @@ def run_query_2():
     conn.close()
     print("Query 2 complete: Job Details saved to results/query_2_job_details.csv")
     return df
+
+def run_query_3():
+    """Average Salary by Role"""
+    query = """
+    SELECT job_title,
+    ROUND(AVG((salary_min + salary_max) / 2 )) as avg_salary,
+    COUNT(*) as job_count,
+    AVG(salary_max - salary_min) as salary_range,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY (salary_min + salary_max) / 2) as median_salary,
+    STDDEV((salary_min + salary_max) / 2) as std_salary
+    FROM job_postings
+    GROUP BY job_title;
+    """
+
+    conn = get_connection()
+    df = pd.read_sql(query, conn)
+    df.to_csv('results/query_3_salary_by_role.csv', index=False)
+    conn.close()
+    print("Query 3 complete: Salary by Role saved to results/query_3_salary_by_role.csv")
+    return df
