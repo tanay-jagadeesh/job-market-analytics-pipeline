@@ -21,3 +21,29 @@ def run_query_1():
     conn.close()
     print("Query 1 complete: Top 10 In-Demand Skills saved to results/query_1_top_skills.csv")
     return df
+
+def run_query_2():
+    """Job Postings with Company and Location Details"""
+    query = """
+    SELECT
+        jp.job_id,
+        jp.job_title,
+        c.company_name,
+        l.city,
+        l.province,
+        jp.salary_min,
+        jp.salary_max,
+        jp.is_remote
+    FROM job_postings jp
+    JOIN companies c ON jp.company_id = c.company_id
+    JOIN locations l ON jp.location_id = l.location_id
+    ORDER BY jp.job_id
+    LIMIT 10;
+    """
+
+    conn = get_connection()
+    df = pd.read_sql(query, conn)
+    df.to_csv('results/query_2_job_details.csv', index=False)
+    conn.close()
+    print("Query 2 complete: Job Details saved to results/query_2_job_details.csv")
+    return df
