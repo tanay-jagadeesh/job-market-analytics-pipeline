@@ -39,6 +39,14 @@ GROUP BY job_title
 
 -- Query 4 - Skill Occurence
 SELECT
-    s1.skill_name as skill_1
-    s2.skill_name as skill_2
+    s1.skill_name AS skill_1,
+    s2.skill_name AS skill_2,
     COUNT(*) as pair_count
+FROM job_skills AS js1
+JOIN job_skills AS js2 ON js1.job_id = js2.job_id AND js1.skill_id < js2.skill_id
+JOIN skills AS s1 ON s1.skill_id = js1.skill_id
+JOIN skills AS s2 ON s2.skill_id = js2.skill_id
+GROUP BY skill_1, skill_2
+HAVING COUNT(*) >= 5
+ORDER BY pair_count DESC
+;
