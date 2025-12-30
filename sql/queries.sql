@@ -61,3 +61,16 @@ WHERE posted_date >= CURRENT_DATE - INTERVAL '90 days'
 GROUP BY week_start
 ORDER BY week_start DESC
 ;
+
+-- Query 6 - Top Hiring Companies
+SELECT
+    c.company_name,
+    COUNT(*) as job_count,
+    COUNT(DISTINCT location_id) AS unique_locations,
+    AVG((salary_min + salary_max) / 2) AS avg_salary
+FROM companies AS c
+JOIN job_postings AS jp ON c.company_id = jp.company_id
+GROUP BY c.company_name
+HAVING COUNT(*) >= 3
+ORDER BY job_count DESC
+;
