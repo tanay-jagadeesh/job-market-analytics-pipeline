@@ -110,3 +110,25 @@ def run_query_5():
     conn.close()
     print("Query 5 complete: Hiring Trends saved to results/query_5_hiring_trends.csv")
     return df
+
+def run_query_6():
+    """Top Hiring Companies"""
+    query = """
+    SELECT
+        c.company_name,
+        COUNT(*) as job_count,
+        COUNT(DISTINCT location_id) AS unique_locations,
+        AVG((salary_min + salary_max) / 2) AS avg_salary
+    FROM companies AS c
+    JOIN job_postings AS jp ON c.company_id = jp.company_id
+    GROUP BY c.company_name
+    HAVING COUNT(*) >= 3
+    ORDER BY job_count DESC;
+    """
+
+    conn = get_connection()
+    df = pd.read_sql(query, conn)
+    df.to_csv('results/query_6_top_companies.csv', index=False)
+    conn.close()
+    print("Query 6 complete: Top Hiring Companies saved to results/query_6_top_companies.csv")
+    return df
