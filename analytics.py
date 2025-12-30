@@ -67,3 +67,26 @@ def run_query_3():
     conn.close()
     print("Query 3 complete: Salary by Role saved to results/query_3_salary_by_role.csv")
     return df
+
+def run_query_4():
+    """Skill Co-occurrence"""
+    query = """
+    SELECT
+        s1.skill_name AS skill_1,
+        s2.skill_name AS skill_2,
+        COUNT(*) as pair_count
+    FROM job_skills AS js1
+    JOIN job_skills AS js2 ON js1.job_id = js2.job_id AND js1.skill_id < js2.skill_id
+    JOIN skills AS s1 ON s1.skill_id = js1.skill_id
+    JOIN skills AS s2 ON s2.skill_id = js2.skill_id
+    GROUP BY skill_1, skill_2
+    HAVING COUNT(*) >= 5
+    ORDER BY pair_count DESC;
+    """
+
+    conn = get_connection()
+    df = pd.read_sql(query, conn)
+    df.to_csv('results/query_4_skill_cooccurrence.csv', index=False)
+    conn.close()
+    print("Query 4 complete: Skill Co-occurrence saved to results/query_4_skill_cooccurrence.csv")
+    return df
