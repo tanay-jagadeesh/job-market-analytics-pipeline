@@ -36,3 +36,9 @@ STDDEV((salary_min + salary_max) / 2) as std_salary
 FROM job_postings
 GROUP BY job_title
 ;
+
+-- Query 4 - Skill Occurence
+SELECT
+    s1.skill_name as skill_1
+    s2.skill_name as skill_2
+    COUNT(*) as pair_count
