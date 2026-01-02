@@ -9,3 +9,7 @@ def job():
 
 #ensures that it runs at 6 am everyday
 schedule.every().day.at("6:00").do(job)
+
+while True:
+    schedule.run_pending()
+    time.sleep(60)
