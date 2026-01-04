@@ -31,6 +31,8 @@ def fetch_jobs():
     data = response.json()
     return data['data']
 
+def process_jobs(jobs):
+
 
 def job():
     run_all_queries()
