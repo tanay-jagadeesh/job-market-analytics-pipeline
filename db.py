@@ -169,3 +169,21 @@ for i, row in df.iterrows():
     print(f"Inserted job {i+1}: {row['job_title']}")
 
 print(f"\nSuccessfully loaded {len(df)} jobs into the database")
+
+#Check for duplicates (if job_url exists then skip)
+
+def check_if_job_exists(job_url):
+    conn = get_connection()
+    c = conn.cursor()
+
+    c.execute("SELECT job_id FROM job_postings WHERE job_url = %s", (job_url,))
+    result = c.fetchone()
+
+    c.close()
+    conn.close()
+
+    if result:
+        return True
+    else:
+        return False
+       

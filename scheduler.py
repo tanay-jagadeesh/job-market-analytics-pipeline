@@ -92,7 +92,6 @@ def load_to_database(jobs):
                     skill_id = insert_skill(skill)
                     insert_job_skills(job_id, skill_id)
 
-
 def job():
     jobs = fetch_jobs()
     process_jobs(jobs)
