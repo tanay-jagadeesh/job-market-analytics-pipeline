@@ -106,6 +106,7 @@ def load_to_database(jobs):
                 province=province,
                 salary_min=salary_min,
                 salary_max=salary_max,
+                job_url=job_url,
             )
 
             # Link skills to job

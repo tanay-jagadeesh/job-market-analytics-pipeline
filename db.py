@@ -97,7 +97,7 @@ def insert_skill(skill_name):
         return skill_id
 
 """gets company/location ids, inserts jobs, returns job_id"""
-def insert_job(job_title, company_name, city, province, salary_min, salary_max, posted_date=None, is_remote=None, experience_level=None, job_description=None):
+def insert_job(job_title, company_name, city, province, salary_min, salary_max, posted_date=None, is_remote=None, experience_level=None, job_description=None, job_url=None):
     company_id = insert_company(company_name)
 
     location_id = insert_location(city, province)
@@ -107,8 +107,8 @@ def insert_job(job_title, company_name, city, province, salary_min, salary_max, 
     c = conn.cursor()
 
     c.execute(
-    "INSERT INTO job_postings (job_title, company_id, location_id, salary_min, salary_max, posted_date, is_remote, experience_level, job_description) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING job_id",
-    (job_title, company_id, location_id, salary_min, salary_max, posted_date, is_remote, experience_level, job_description)
+    "INSERT INTO job_postings (job_title, company_id, location_id, salary_min, salary_max, posted_date, is_remote, experience_level, job_description, job_url) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING job_id",
+    (job_title, company_id, location_id, salary_min, salary_max, posted_date, is_remote, experience_level, job_description, job_url)
 )
     job_id = c.fetchone()[0]
     conn.commit()
