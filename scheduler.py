@@ -5,34 +5,50 @@ from analytics import run_all_queries
 import requests
 from dotenv import load_dotenv
 import os
-from db import insert_job, insert_skill, insert_job_skills
+from db import insert_job, insert_skill, insert_job_skills, check_if_job_exists
 import pandas as pd
-import re 
+import re
+import logging
+
+# At the top after imports
+logging.basicConfig(
+    filename='logs/scheduler.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
 
 # ETL (Extract, Transform, Load)
 def fetch_jobs():
-    
-    load_dotenv()
+    try:
+        load_dotenv()
 
-    app_key = os.getenv('JSEARCH_API_KEY')
+        app_key = os.getenv('JSEARCH_API_KEY')
 
-    url = "https://jsearch.p.rapidapi.com/search"
+        url = "https://jsearch.p.rapidapi.com/search"
 
-    headers = {
-        "X-RapidAPI-Key": app_key,
-        "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
-    }
+        headers = {
+            "X-RapidAPI-Key": app_key,
+            "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
+        }
 
-    params = {
-        "query": "data analyst",
-        "num_pages": 1,
-        "country": "ca"
-    }
+        params = {
+            "query": "data analyst",
+            "num_pages": 1,
+            "country": "ca"
+        }
 
-    response = requests.get(url = url, headers = headers, params = params)
-    response.raise_for_status()
-    data = response.json()
-    return data['data']
+        response = requests.get(url = url, headers = headers, params = params)
+        response.raise_for_status()
+        data = response.json()
+
+        # Log API call
+        logging.info(f"API Call - Query: {params['query']}, Results: {len(data['data'])}")
+
+        return data['data']
+    except Exception as e:
+        logging.error(f"Error fetching jobs: {str(e)}")
+        raise
 
 def process_jobs(jobs):
     skills_list = ['python', 'sql', 'aws', 'java', 'tableau', 'power bi', 'excel', 'r', 'spark', 'azure']
@@ -64,33 +80,52 @@ def process_jobs(jobs):
 def load_to_database(jobs):
     skills_list = ['python', 'sql', 'aws', 'java', 'tableau', 'power bi', 'excel', 'r', 'spark', 'azure']
 
-    for job in jobs:
+    added_count = 0
+    duplicate_count = 0
 
-        job_title = job.get('job_title')
-        company_name = job.get('employer_name')
-        city = job.get('job_city')
-        province = job.get('job_state')
-        salary_min = int(job.get('job_min_salary', 0))  
-        salary_max = int(job.get('job_max_salary', 0))
+    try:
+        for job in jobs:
+            job_url = job.get('job_apply_link')
 
-        job_id = insert_job(
-            job_title=job_title,
-            company_name=company_name,
-            city=city,
-            province=province,
-            salary_min=salary_min,
-            salary_max=salary_max,
-        )
+            # Check for duplicates
+            if job_url and check_if_job_exists(job_url):
+                duplicate_count += 1
+                continue  # Skip this job
 
-        # Link skills to job
-        job_description = job.get('job_description')
-        if job_description:
-            desc_lower = job_description.lower()
-            for skill in skills_list:
-                # Use word boundaries to match whole words only
-                if re.search(rf'\b{re.escape(skill)}\b', desc_lower):
-                    skill_id = insert_skill(skill)
-                    insert_job_skills(job_id, skill_id)
+            job_title = job.get('job_title')
+            company_name = job.get('employer_name')
+            city = job.get('job_city')
+            province = job.get('job_state')
+            salary_min = int(job.get('job_min_salary', 0))
+            salary_max = int(job.get('job_max_salary', 0))
+
+            job_id = insert_job(
+                job_title=job_title,
+                company_name=company_name,
+                city=city,
+                province=province,
+                salary_min=salary_min,
+                salary_max=salary_max,
+            )
+
+            # Link skills to job
+            job_description = job.get('job_description')
+            if job_description:
+                desc_lower = job_description.lower()
+                for skill in skills_list:
+                    # Use word boundaries to match whole words only
+                    if re.search(rf'\b{re.escape(skill)}\b', desc_lower):
+                        skill_id = insert_skill(skill)
+                        insert_job_skills(job_id, skill_id)
+
+            added_count += 1
+
+        # Log results
+        logging.info(f"Database Load - Jobs added: {added_count}, Duplicates skipped: {duplicate_count}")
+
+    except Exception as e:
+        logging.error(f"Error loading to database: {str(e)}")
+        raise
 
 def job():
     jobs = fetch_jobs()
