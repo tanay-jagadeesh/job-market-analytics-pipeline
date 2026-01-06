@@ -71,7 +71,7 @@ def fetch_jobs():
         raise
 
 def process_jobs(jobs):
-    skills_list = ['python', 'sql', 'aws', 'java', 'tableau', 'power bi', 'excel', 'r', 'spark', 'azure']
+    skills_list = ['python', 'r', 'java', 'scala', 'julia', 'c++', 'javascript', 'typescript', 'sql', 'mysql', 'postgresql', 'postgres', 'mongodb', 'redis', 'cassandra', 'oracle', 'snowflake', 'bigquery', 'aws', 'azure', 'gcp', 'google cloud', 'spark', 'hadoop', 'kafka', 'flink', 'hive', 'presto', 'tableau', 'power bi', 'looker', 'qlik', 'metabase', 'superset', 'tensorflow', 'pytorch', 'scikit-learn', 'pandas', 'numpy', 'keras', 'xgboost', 'excel', 'git', 'docker', 'kubernetes', 'k8s', 'airflow', 'dbt', 'databricks', 'etl', 'data pipeline', 'data warehouse', 'data lake', 'statistics', 'machine learning', 'deep learning', 'nlp', 'computer vision', 'sas', 'spss', 'matlab']
 
     for job in jobs:
         job_description = job.get('job_description')
@@ -98,7 +98,7 @@ def process_jobs(jobs):
             print("This is a remote job")
 
 def load_to_database(jobs):
-    skills_list = ['python', 'sql', 'aws', 'java', 'tableau', 'power bi', 'excel', 'r', 'spark', 'azure']
+    skills_list = ['python', 'r', 'java', 'scala', 'julia', 'c++', 'javascript', 'typescript', 'sql', 'mysql', 'postgresql', 'postgres', 'mongodb', 'redis', 'cassandra', 'oracle', 'snowflake', 'bigquery', 'aws', 'azure', 'gcp', 'google cloud', 'spark', 'hadoop', 'kafka', 'flink', 'hive', 'presto', 'tableau', 'power bi', 'looker', 'qlik', 'metabase', 'superset', 'tensorflow', 'pytorch', 'scikit-learn', 'pandas', 'numpy', 'keras', 'xgboost', 'excel', 'git', 'docker', 'kubernetes', 'k8s', 'airflow', 'dbt', 'databricks', 'etl', 'data pipeline', 'data warehouse', 'data lake', 'statistics', 'machine learning', 'deep learning', 'nlp', 'computer vision', 'sas', 'spss', 'matlab']
 
     added_count = 0
     duplicate_count = 0
