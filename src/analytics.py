@@ -1,6 +1,8 @@
 import pandas as pd
 from db import get_connection
 import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 
 def run_query_1():
     """Top 10 In-Demand Skills"""
@@ -200,5 +202,41 @@ plt.title('Top 10 Hiring Companies: Market Share')
 # Save the figure to images folder
 plt.savefig('images/top_companies.png', bbox_inches='tight')
 
+plt.close()
+
+# Read skill co-occurrence data from CSV
+df_skills = pd.read_csv('results/query_4_skill_cooccurrence.csv')
+
+# Get all unique skills
+all_skills = sorted(set(df_skills['skill_1'].unique()) | set(df_skills['skill_2'].unique()))
+
+# Create a matrix (2D array) to store co-occurrence counts
+matrix = np.zeros((len(all_skills), len(all_skills)))
+
+# Fill the matrix with co-occurrence counts
+for _, row in df_skills.iterrows():
+    skill1_idx = all_skills.index(row['skill_1'])
+    skill2_idx = all_skills.index(row['skill_2'])
+    
+    matrix[skill1_idx][skill2_idx] = row['pair_count']
+    matrix[skill2_idx][skill1_idx] = row['pair_count']
+
+# Create a figure with size 12x10 inches
+plt.figure(figsize=(12, 10))
+# Create heatmap with skill names as labels
+sns.heatmap(matrix, xticklabels=all_skills, yticklabels=all_skills,
+            annot=True, fmt='.0f', cmap='YlOrRd', cbar_kws={'label': 'Co-occurrence Count'})
+
+# Add title
+plt.title('Skill Co-occurrence Heatmap')
+plt.xlabel('Skills')
+plt.ylabel('Skills')
+
+# Rotate labels for better readability
+plt.xticks(rotation=45, ha='right')
+plt.yticks(rotation=0)
+
+# Save the figure to images folder
+plt.savefig('images/skill_cooccurrence.png', bbox_inches='tight')
 
 plt.close()
