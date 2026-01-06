@@ -9,13 +9,20 @@ from db import insert_job, insert_skill, insert_job_skills, check_if_job_exists
 import pandas as pd
 import re
 import logging
+from logging.handlers import TimedRotatingFileHandler
 
-# At the top after imports
-logging.basicConfig(
+# Set up log rotation (keeps last 30 days)
+handler = TimedRotatingFileHandler(
     filename='logs/scheduler.log',
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    when='midnight',      
+    interval=1,          
+    backupCount=30      
 )
+handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.addHandler(handler)
 
 
 # ETL (Extract, Transform, Load)
@@ -32,20 +39,33 @@ def fetch_jobs():
             "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
         }
 
-        params = {
-            "query": "data analyst",
-            "num_pages": 1,
-            "country": "ca"
-        }
+        queries = [
+            "data analyst Montreal",
+            "business analyst Vancouver",
+            "data engineer Toronto", 
+            "remote data scientist Alberta",
+            "junior data analyst British Columbia"
+        ]
 
-        response = requests.get(url = url, headers = headers, params = params)
-        response.raise_for_status()
-        data = response.json()
+        all_jobs = []
+        for query in queries:
+            params = {
+                "query": query,
+                "num_pages": 1,
+                "country": "ca",
+            }
+
+            response = requests.get(url = url, headers = headers, params = params)
+            response.raise_for_status()
+            data = response.json()
+
+            for job in data['data']:
+                all_jobs.append(job)
 
         # Log API call
-        logging.info(f"API Call - Query: {params['query']}, Results: {len(data['data'])}")
+            logging.info(f"API Call - Query: {params['query']}, Results: {len(data['data'])}")
 
-        return data['data']
+        return all_jobs
     except Exception as e:
         logging.error(f"Error fetching jobs: {str(e)}")
         raise
@@ -135,7 +155,7 @@ def job():
     run_all_queries()
 
 #ensures that it runs at 6 am everyday
-schedule.every().day.at("6:00").do(job)
+schedule.every().day.at("06:00").do(job)
 
 while True:
     schedule.run_pending()
