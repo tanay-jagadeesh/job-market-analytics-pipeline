@@ -100,6 +100,13 @@ def process_jobs(jobs):
 def load_to_database(jobs):
     skills_list = ['python', 'r', 'java', 'scala', 'julia', 'c++', 'javascript', 'typescript', 'sql', 'mysql', 'postgresql', 'postgres', 'mongodb', 'redis', 'cassandra', 'oracle', 'snowflake', 'bigquery', 'aws', 'azure', 'gcp', 'google cloud', 'spark', 'hadoop', 'kafka', 'flink', 'hive', 'presto', 'tableau', 'power bi', 'looker', 'qlik', 'metabase', 'superset', 'tensorflow', 'pytorch', 'scikit-learn', 'pandas', 'numpy', 'keras', 'xgboost', 'excel', 'git', 'docker', 'kubernetes', 'k8s', 'airflow', 'dbt', 'databricks', 'etl', 'data pipeline', 'data warehouse', 'data lake', 'statistics', 'machine learning', 'deep learning', 'nlp', 'computer vision', 'sas', 'spss', 'matlab']
 
+    skill_mapping = {
+        'postgres': 'postgresql',
+        'k8s': 'kubernetes',
+        'sklearn': 'scikit-learn',
+        'gcp': 'google cloud',
+    }
+
     added_count = 0
     duplicate_count = 0
 
@@ -107,10 +114,9 @@ def load_to_database(jobs):
         for job in jobs:
             job_url = job.get('job_apply_link')
 
-            # Check for duplicates
             if job_url and check_if_job_exists(job_url):
                 duplicate_count += 1
-                continue  # Skip this job
+                continue
 
             job_title = job.get('job_title')
             company_name = job.get('employer_name')
@@ -129,15 +135,19 @@ def load_to_database(jobs):
                 job_url=job_url,
             )
 
-            # Link skills to job
             job_description = job.get('job_description')
             if job_description:
                 desc_lower = job_description.lower()
+                found_skills = set()
+
                 for skill in skills_list:
-                    # Use word boundaries to match whole words only
                     if re.search(rf'\b{re.escape(skill)}\b', desc_lower):
-                        skill_id = insert_skill(skill)
-                        insert_job_skills(job_id, skill_id)
+                        canonical_skill = skill_mapping.get(skill, skill)
+                        found_skills.add(canonical_skill)
+
+                for canonical_skill in found_skills:
+                    skill_id = insert_skill(canonical_skill)
+                    insert_job_skills(job_id, skill_id)
 
             added_count += 1
 
