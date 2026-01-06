@@ -31,3 +31,7 @@ Heatmap showing which skills are commonly required together in job postings.
 **Database:** PostgreSQL 
 **Automation:** Schedule
 **Visualization:** Streamlit, Plotly, Matplotlib, Seaborn
+
+## Conclusion
+
+Project was great since I learned a lot about streamlit (even though it took me a while to learn). Only downside was that the API was limiting and did not include everything I wanted it to but in the future investing in a better API seems like it would be more valuable.
