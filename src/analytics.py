@@ -177,5 +177,28 @@ plt.title('Top 9 In-Demand Skills')
 
 # Save the figure to images folder (bbox_inches='tight' removes extra whitespace)
 plt.savefig('images/top_skills.png', bbox_inches='tight')
-# Close the figure to free up memory
+
+plt.close()
+
+# Read the top companies data from CSV
+df_companies = pd.read_csv('results/query_6_top_companies.csv')
+
+# Get top 10 companies
+df_top_companies = df_companies.head(10)
+
+# Create a figure with size 10x8 inches
+plt.figure(figsize=(10, 8))
+# Create pie chart with percentages
+plt.pie(df_top_companies['job_count'], labels=df_top_companies['company_name'], autopct='%1.1f%%')
+# Add white circle in center to create donut effect
+circle = plt.Circle((0,0), 0.70, fc='white')
+plt.gca().add_artist(circle)
+
+# Add title
+plt.title('Top 10 Hiring Companies: Market Share')
+
+# Save the figure to images folder
+plt.savefig('images/top_companies.png', bbox_inches='tight')
+
+
 plt.close()
