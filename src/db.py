@@ -130,46 +130,6 @@ def insert_job_skills(job_id, skill_id):
     c.close()
     conn.close()
 
-df = pd.read_csv('jobs_info.csv').head(50)
-
-skills_list = ['python', 'sql', 'aws', 'java', 'tableau', 'power bi', 'excel', 'r', 'spark', 'azure']
-
-for i, row in df.iterrows():
-    # Parse posted_date
-    posted_date = None
-    if pd.notna(row['job_posted_at']):
-        try:
-            posted_date = pd.to_datetime(row['job_posted_at']).date()
-        except:
-            posted_date = None
-
-    # Insert job with all parameters, handling missing values
-    job_id = insert_job(
-        job_title=row['job_title'],
-        company_name=row['employer_name'],
-        city=row['job_city'] if pd.notna(row['job_city']) else 'Unknown',
-        province=row['job_state'] if pd.notna(row['job_state']) else 'Unknown',
-        salary_min=int(row['job_min_salary']) if pd.notna(row['job_min_salary']) else 0,
-        salary_max=int(row['job_max_salary']) if pd.notna(row['job_max_salary']) else 0,
-        posted_date=posted_date,
-        is_remote=bool(row['job_is_remote']) if pd.notna(row['job_is_remote']) else False,
-        experience_level=None,
-        job_description=row['job_description'] if pd.notna(row['job_description']) else None
-    )
-
-    # Link skills to job
-    if pd.notna(row['job_description']):
-        desc_lower = row['job_description'].lower()
-        for skill in skills_list:
-            # Use word boundaries to match whole words only (prevents 'r' from matching 'programmer')
-            if re.search(rf'\b{re.escape(skill)}\b', desc_lower):
-                skill_id = insert_skill(skill)
-                insert_job_skills(job_id, skill_id)
-
-    print(f"Inserted job {i+1}: {row['job_title']}")
-
-print(f"\nSuccessfully loaded {len(df)} jobs into the database")
-
 #Check for duplicates (if job_url exists then skip)
 
 def check_if_job_exists(job_url):

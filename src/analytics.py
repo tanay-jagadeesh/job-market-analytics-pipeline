@@ -1,5 +1,6 @@
 import pandas as pd
 from db import get_connection
+import matplotlib.pyplot as plt
 
 def run_query_1():
     """Top 10 In-Demand Skills"""
@@ -157,3 +158,24 @@ if __name__ == "__main__":
 
     # Run all queries
     run_all_queries()
+
+# Read the top skills data from CSV
+df = pd.read_csv('results/query_1_top_skills.csv')
+
+# Get top 9 skills
+df_top_skills = df.head(9)
+
+# Create a figure with size 10x8 inches
+plt.figure(figsize = (10, 8))
+# Create horizontal bar chart: skill names on Y-axis, percentages on X-axis
+plt.barh(df_top_skills['skill_name'], df_top_skills['percentage_of_jobs'])
+
+# Add labels to axes
+plt.xlabel('Percentage of Jobs')
+plt.ylabel('Skill')
+plt.title('Top 9 In-Demand Skills')
+
+# Save the figure to images folder (bbox_inches='tight' removes extra whitespace)
+plt.savefig('images/top_skills.png', bbox_inches='tight')
+# Close the figure to free up memory
+plt.close()
